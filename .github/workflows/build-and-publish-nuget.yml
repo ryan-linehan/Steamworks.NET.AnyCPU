@@ -1,6 +1,11 @@
 name: Build & Publish Package
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version (e.g., 2025.162.1)'
+        required: true
+        type: string
 
 # Uncomment to enable OIDC authentication for nuget publishing
 # permissions:
@@ -27,7 +32,8 @@ jobs:
       - name: restore, build, pack Steamworks.NET.AnyCPU
         run: |
           dotnet pack ./Standalone3.0/Steamworks.NET.csproj \
-            --configuration Release 
+            --configuration Release \
+            -p:Version=${{ github.event.inputs.version }} 
 
       # Upload the NuGet package as an artifact
       - name: Upload NuGet package artifact
